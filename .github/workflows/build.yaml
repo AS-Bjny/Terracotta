@@ -57,8 +57,7 @@ jobs:
         run: |
           source="terracotta-${TERRACOTTA_VERSION}-${{ matrix.os }}-${{ matrix.arch }}.exe"
           cp "target/${{ matrix.target }}/release/terracotta.exe" "$source"
-          cp "config.json" "config.json"
-          7z a "$source.zip" "$source" "config.json"
+          7z a "$source.zip" "$source"
           cat "$source.zip" | gh-actions-artifact-client.js upload -r 90 "$source"
 
   assemble-packages:
@@ -89,8 +88,7 @@ jobs:
           if [ ! -z "${{ github.event.inputs.version }}" ]; then
             mkdir -p bundle
             curl -L -o VCRUNTIME140.DLL "https://github.com/burningtnt/Terracotta/raw/refs/heads/binaries/windows_x86_64/vcruntime140.dll"
-            cp "config.json" "config.json"
-            tar -czvf bundle/terracotta-${TERRACOTTA_VERSION}-windows-x86_64-pkg.tar.gz terracotta-${TERRACOTTA_VERSION}-windows-x86_64.exe VCRUNTIME140.DLL config.json
+            tar -czvf bundle/terracotta-${TERRACOTTA_VERSION}-windows-x86_64-pkg.tar.gz terracotta-${TERRACOTTA_VERSION}-windows-x86_64.exe VCRUNTIME140.DLL
             gh release create v"${{ github.event.inputs.version }}" -R "${{ github.repository }}" --draft --generate-notes bundle/terracotta-${TERRACOTTA_VERSION}-*
           fi
         env:
